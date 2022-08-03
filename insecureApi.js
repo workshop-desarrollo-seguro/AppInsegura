@@ -6,7 +6,7 @@ const app = express()
 const port = 3000
 
 
-/* Sean buenos y no miren la contraseña segura de la Base de datos  */
+/* Sean buenos y no miren la contraseña segura de la Base de datos   */
 var con = mysql.createConnection({
     host: "localhost",
     user: "workshop",
