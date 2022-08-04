@@ -34,11 +34,20 @@ jobs:
 
   Deploy:
     name: deploy
-    runs-on: alpine
+    needs: SonarCloud
+    runs-on: ubuntu-latest
     steps:
-    - name: Test
-      # uses: appleboy/ssh-action@master
+    - name: Deploy - Step 1
+      run: 
+        echo ".................Simulación de deploy................."
       
       
-
+  ZapTest:
+    name: zapTest
+    needs: Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: zapTest - Step1
+      run: 
+        echo ".................ZAP Test................."
     
