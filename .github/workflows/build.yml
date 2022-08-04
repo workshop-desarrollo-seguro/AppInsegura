@@ -31,3 +31,14 @@ jobs:
           args:             
             -Dsonar.projectKey=workshop-desarrollo-seguro_AppInsegura
             -Dsonar.organization=workshop-desarrollo-seguro
+
+  Deploy:
+    name: deploy
+    runs-on: alpine
+    steps:
+    - name: Test
+      # uses: appleboy/ssh-action@master
+      
+      
+
+    
