@@ -1,8 +1,7 @@
 name: Build
 on:
   push:
-    branches:
-      ["main"]
+    branches: [main]
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
@@ -11,9 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Test1
-        env:
-          MESSAGE: ${{ github.event.client_payload.message }}
-        run: echo $MESSAGE
+        run: echo 'Test1'
 
   sonarcloud:
     name: SonarCloud
