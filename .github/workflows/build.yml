@@ -11,10 +11,32 @@ jobs:
     steps:
       - name: Test1
         run: echo 'Test1'
+        
+  OWASP_Dependency_Check:
+    name: OWASP Dependency Check
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: OWASP Dependency Check
+        uses: dependency-check/Dependency-Check_Action@main
+        id: Depcheck
+        with:
+          project: 'prueba'
+          path: '.'
+          format: 'HTML'    
+          args: >
+            --failOnCVSS 7
+            --enableRetired
+            
+      - name: Upload Test results
+        uses: actions/upload-artifact@master
+        with:
+          name: Depcheck report
+          path: ${{github.workspace}}/reports        
 
   sonarcloud:
     name: SonarCloud
-    needs: [Test1]
+    needs: [Test1, OWASP_Dependency_Check]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
