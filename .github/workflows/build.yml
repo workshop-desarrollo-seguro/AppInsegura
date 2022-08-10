@@ -74,3 +74,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  ZAP_Scan:
+    needs: Test1
+    name: ZAP Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: ZAP Scan
+        uses: zaproxy/action-baseline@v0.5.0
+        with:
+          target: ${{ secrets.SERVER_WEB }}
