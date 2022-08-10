@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Test1
-      - env:
+        env:
           MESSAGE: ${{ github.event.client_payload.message }}
         run: echo $MESSAGE
 
