@@ -6,8 +6,18 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
+  Test1:
+    name: Test1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test1
+      - env:
+          MESSAGE: ${{ github.event.client_payload.message }}
+        run: echo $MESSAGE
+
   sonarcloud:
     name: SonarCloud
+    needs: [Test1]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
