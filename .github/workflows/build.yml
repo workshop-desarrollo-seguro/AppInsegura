@@ -59,6 +59,7 @@ jobs:
 
   sonarcloud:
     name: SonarCloud
+    needs: OWASP_Dependency_Check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -72,6 +73,7 @@ jobs:
 
   Deploy:
     name: Deploy
+    needs: [sonarcloud, CodeQL]
     runs-on: ubuntu-latest
     steps:
       - name: FakeDeploy
