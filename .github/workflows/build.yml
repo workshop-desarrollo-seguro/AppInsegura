@@ -6,8 +6,40 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
+
+  OWASP_Dependency_Check:
+    name: OWASP Dependency Check
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: OWASP Dependency Check
+        uses: dependency-check/Dependency-Check_Action@main
+        id: Depcheck
+        with:
+          project: 'Prueba'
+          path: '.'
+          format: 'HTML'    
+          args: >
+            --failOnCVSS 7
+            --enableRetired
+            
+      - name: Upload Test results
+        uses: actions/upload-artifact@master
+        with:
+          name: Depcheck report
+          path: ${{github.workspace}}/reports 
+  
+  Test1:
+    name: Test1
+    needs: OWASP_Dependency_Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test1
+        run: echo 'Test1'
+
   sonarcloud:
     name: SonarCloud
+    needs: Test1
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -18,3 +50,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          
+  ZAP_Scan:
+    needs: sonarcloud
+    name: ZAP Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: ZAP Scan
+        uses: zaproxy/action-baseline@v0.5.0
+        with:
+          target: ${{ secrets.SERVER_WEB }}          
