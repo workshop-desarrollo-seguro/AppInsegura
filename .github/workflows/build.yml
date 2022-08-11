@@ -5,13 +5,7 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
-  Test1:
-    name: Test1
-    runs-on: ubuntu-latest
-    steps:
-      - name: Test1
-        run: echo 'Test1'
-        
+
   OWASP_Dependency_Check:
     name: OWASP Dependency Check
     runs-on: ubuntu-latest
@@ -32,7 +26,8 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           name: Depcheck report
-          path: ${{github.workspace}}/reports        
+          path: ${{github.workspace}}/reports  
+
 
   CodeQL:
     needs: OWASP_Dependency_Check
@@ -61,9 +56,9 @@ jobs:
         - name: Perform CodeQL Analysis
           uses: github/codeql-action/analyze@v2
 
+
   sonarcloud:
     name: SonarCloud
-    needs: [Test1, OWASP_Dependency_Check]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -75,8 +70,15 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
+  Deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: FakeDeploy
+        run: echo 'Test'
+
   ZAP_Scan:
-    needs: Test1
+    needs: [Deploy]
     name: ZAP Scan
     runs-on: ubuntu-latest
     steps:
@@ -84,3 +86,21 @@ jobs:
         uses: zaproxy/action-baseline@v0.5.0
         with:
           target: ${{ secrets.SERVER_WEB }}
+          
+  nuclei-scan:
+    needs: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Nuclei - DAST Scan
+        uses: projectdiscovery/nuclei-action@main
+        with:
+          target: ${{ secrets.SERVER_WEB }}
+          flags: "-severity critical,high -stats"
+
+      - name: GitHub Workflow artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: nuclei.log
+          path: ./nuclei.log           
