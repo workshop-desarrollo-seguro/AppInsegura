@@ -5,8 +5,7 @@ var express = require('express')
 const app = express()
 const port = 3000
 
-
-/* Sean buenos y no miren la contraseña segura de la Base de datos   */
+/* Sean buenos y no miren la contraseña segura de la Base de datos */
 var con = mysql.createConnection({
     host: "localhost",
     user: "workshop",
@@ -38,7 +37,7 @@ var con = mysql.createConnection({
 
 
   app.get('/api/post/:id', function(request,response) {
-    con.query('SELECT * FROM post where id = ?',[request.params.id], function(err, rows, fields) {
+    con.query('SELECT * FROM post where id = ' + request.params.id, function(err, rows, fields) {
       if (err) {
         return response.send(500, err.message);
       }
