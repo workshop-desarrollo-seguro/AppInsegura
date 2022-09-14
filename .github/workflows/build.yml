@@ -29,8 +29,8 @@ jobs:
           name: Depcheck report
           path: ${{github.workspace}}/reports 
   
-  Test1:
-    name: Test1
+  DeployToProduction:
+    name: DeployToProduction
     needs: OWASP_Dependency_Check
     runs-on: ubuntu-latest
     steps:
@@ -39,7 +39,7 @@ jobs:
 
           
   ZAP_Scan:
-    needs: Test1
+    needs: DeployToProduction
     name: ZAP Scan
     runs-on: ubuntu-latest
     steps:
